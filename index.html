@@ -249,10 +249,6 @@
             box-shadow: 0 15px 25px -5px rgba(217, 119, 6, 0.5);
         }
 
-        .btn-luxury:active {
-            transform: translateY(0);
-        }
-
         /* Quiz Interface */
         #quiz-screen {
             display: none;
@@ -382,7 +378,11 @@
         /* Results Screen */
         #results-screen {
             display: none;
+        }
+
+        .results-header-container {
             text-align: center;
+            margin-bottom: 2.5rem;
         }
 
         .results-header-icon {
@@ -402,7 +402,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1.5rem;
-            margin: 2.5rem 0;
+            margin: 2rem 0;
         }
 
         .score-metric-card {
@@ -436,6 +436,81 @@
             font-size: 1.05rem;
             font-weight: 500;
             color: var(--text-heading);
+            text-align: center;
+        }
+
+        /* Detailed Mistake Review Section */
+        .review-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--text-heading);
+            margin: 2.5rem 0 1.5rem 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .mistake-card {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-left: 5px solid var(--danger);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+
+        .mistake-card.all-correct {
+            border-left-color: var(--success);
+            background: #f0fdf4;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .mistake-q-num {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 0.4rem;
+        }
+
+        .mistake-q-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 1rem;
+        }
+
+        .mistake-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .wrong-ans {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .correct-ans {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .explanation-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .explanation-box b {
+            color: var(--primary);
         }
 
         /* Footer */
@@ -461,6 +536,9 @@
             .brand-logo {
                 flex-direction: column;
                 gap: 5px;
+            }
+            .mistake-details {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -490,15 +568,15 @@
         <!-- WELCOME SCREEN -->
         <div class="card" id="welcome-screen">
             <h2>Class 6 Computer Science Assessment</h2>
-            <p class="subtitle">Comprehensive 50-Question Master Test (Chapters 1, 3 & 5)</p>
+            <p class="subtitle">Comprehensive 50-Question Professional Master Test (Chapters 1, 3 & 5)</p>
             
             <div class="instructions-box">
                 <h4><i class="fa-solid fa-circle-info"></i> Exam Guidelines & Instructions:</h4>
                 <ul>
-                    <li><i class="fa-solid fa-check"></i> Total Questions: exactly 50 High-Level Multiple Choice Questions (Randomly shuffled).</li>
+                    <li><i class="fa-solid fa-check"></i> Total Questions: 50 Fresh Variant Multiple Choice Questions (Randomly shuffled).</li>
                     <li><i class="fa-solid fa-check"></i> Allocated Time: 45 Minutes real-time countdown timer.</li>
-                    <li><i class="fa-solid fa-check"></i> Automatic Submission: Test automatically submits when the timer hits zero.</li>
-                    <li><i class="fa-solid fa-check"></i> Instant Evaluation & Detailed Performance Analytics upon submission.</li>
+                    <li><i class="fa-solid fa-check"></i> Automatic Submission: Test automatically closes and evaluates when time runs out.</li>
+                    <li><i class="fa-solid fa-check"></i> Detailed Post-Test Breakdown: Instantly view your errors with correct options and clear educational explanations!</li>
                 </ul>
             </div>
 
@@ -506,10 +584,6 @@
                 <div class="form-group">
                     <label for="candidate-name"><i class="fa-solid fa-user"></i> Full Name of Student</label>
                     <input type="text" id="candidate-name" placeholder="Enter your full name here..." required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="candidate-date"><i class="fa-solid fa-calendar-days"></i> Assessment Date</label>
-                    <input type="date" id="candidate-date" required>
                 </div>
                 <button type="submit" class="btn-luxury">
                     Start Professional Examination <i class="fa-solid fa-arrow-right"></i>
@@ -551,14 +625,16 @@
 
         <!-- RESULTS SCREEN -->
         <div class="card" id="results-screen">
-            <div class="results-header-icon">
-                <i class="fa-solid fa-award"></i>
+            <div class="results-header-container">
+                <div class="results-header-icon">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <h2>Assessment Completed</h2>
+                <p class="subtitle">Review your performance analytics and detailed mistake corrections below.</p>
             </div>
-            <h2>Assessment Completed</h2>
-            <p class="subtitle">Here is your professional performance evaluation breakdown.</p>
             
             <div class="candidate-summary" id="result-candidate-info">
-                Candidate: John Doe | Date: 2026-06-06
+                Candidate: John Doe
             </div>
 
             <div class="score-card-container">
@@ -576,526 +652,595 @@
                 </div>
             </div>
 
-            <button class="btn-luxury" onclick="location.reload()" style="margin-top: 1.5rem;">
-                <i class="fa-solid fa-rotate-right"></i> Retake Examination
+            <!-- Detailed Missed Questions Review Section -->
+            <h3 class="review-section-title"><i class="fa-solid fa-clipboard-question"></i> Detailed Performance Review & Mistake Corrections</h3>
+            <div id="mistakes-review-container">
+            <!-- Injected via JS -->
+            </div>
+            
+            <button class="btn-luxury" onclick="location.reload()" style="margin-top: 2rem;">
+            <i class="fa-solid fa-rotate-right"></i> Retake Examination
             </button>
-        </div>
-
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 S & A Tuitions (Cambridge Section). All Rights Reserved. Professional Learning & Assessment Platform.</p>
-    </footer>
-
-    <!-- JavaScript Engine -->
-    <script>
-        // Master Pool of 50 High-Level Class 6 Cambridge Computer MCQs covering Chapter 1, 3 & 5
-        const masterQuestions = [
-            // Chapter 1: Computer Fundamentals & ICT (approx 17 questions)
+            </div>
+            
+            </div>
+            
+            <!-- Footer -->
+            <footer>
+            <p>&copy; 2026 S & A Tuitions (Cambridge Section). All Rights Reserved. Professional Learning & Assessment Platform.</p>
+            </footer>
+            
+            <!-- JavaScript Engine -->
+            <script>
+            // 50 Fresh Variant Master Question Bank with Detailed Explanations
+            const masterQuestions = [
+            // Chapter 1: Computer Fundamentals & ICT (17 Questions)
             {
-                q: "The term computer is derived from which Latin word?",
-                options: ["Computaria", "Computare", "Computerus", "Computation"],
-                answer: 1,
-                chapter: "Chapter 1: Fundamentals"
+            q: "From which ancient language is the English word 'computer' primarily derived?",
+            options: ["Greek", "Latin", "French", "German"],
+            answer: 1,
+            chapter: "Chapter 1: Fundamentals",
+            explanation: "The word computer comes from the Latin word 'computare', which means to calculate."
             },
             {
-                q: "What does the Latin word 'computare' mean?",
-                options: ["To store", "To write", "To calculate", "To display"],
-                answer: 2,
-                chapter: "Chapter 1: Fundamentals"
+            q: "What is the primary function of a computer when it accepts raw facts from an input device?",
+            options: ["Storage", "Processing", "Display", "Printing"],
+            answer: 1,
+            explanation: "When a computer receives input data, it processes or performs actions on that data according to user instructions."
             },
             {
-                q: "The concept of generating output from input after processing is known as the:",
-                options: ["IPO Cycle", "CPU Cycle", "Data Processing Cycle", "Output-Input Cycle"],
-                answer: 0,
-                chapter: "Chapter 1: Fundamentals"
+            q: "Which sequence correctly represents the complete Input-Processing-Output (IPO) cycle?",
+            options: [
+            "Output -> Input -> Processing",
+            "Input -> Processing -> Output",
+            "Processing -> Output -> Input",
+            "Input -> Output -> Storage"
+            ],
+            answer: 1,
+            chapter: "Chapter 1: Fundamentals",
+            explanation: "The IPO cycle stands for Input-Processing-Output sequence, where a computer accepts input, processes it, and outputs results."
             },
             {
-                q: "Which of the following is an input device mentioned in the textbook?",
-                options: ["Monitor", "Printer", "Keyboard", "Speaker"],
-                answer: 2,
-                chapter: "Chapter 1: Fundamentals"
+            q: "Which of the following items is classified specifically as raw data rather than processed output?",
+            options: ["A generated bar chart", "Numbers, words, and pictures before processing", "A printed tax summary document", "A sound clip from a speaker"],
+            answer: 1,
+            chapter: "Chapter 1: Data vs Information",
+            explanation: "Data consists of unorganized numbers, words, or pictures that are fed into the system to be processed into meaningful information."
             },
             {
-                q: "Information that can be translated into an efficient form for processing is called:",
-                options: ["Software", "Data", "Hardware", "Output"],
-                answer: 1,
-                chapter: "Chapter 1: Fundamentals"
+            q: "Which specialized class of computers handles extreme speed calculations and costs millions of dollars?",
+            options: ["Microcomputer", "Mainframe", "Supercomputer", "Tablet"],
+            answer: 2,
+            chapter: "Chapter 1: Types of Computers",
+            explanation: "Supercomputers possess a high level of performance and extreme speed, making them ideal for heavy scientific and engineering tasks."
             },
-{
-          q: "Output generated after processing data can be in the form of:",
-          options: ["Text and sound", "Images and documents", "Video", "All of the above"],
-          answer: 3,
-          chapter: "Chapter 1: Fundamentals"
-      },
-      {
-          q: "Which type of computer costs millions of dollars and is primarily used for scientific and engineering work?",
-          options: ["Mainframe", "Supercomputer", "Microcomputer", "Handheld Computer"],
-          answer: 1,
-          chapter: "Chapter 1: Types of Computers"
-      },
-      {
-          q: "Mainframe computers process large amounts of data for:",
-          options: ["Personal home use", "Commercial databases and real-time transaction servers", "Playing high-end games only", "Small handheld operations"],
-          answer: 1,
-          chapter: "Chapter 1: Types of Computers"
-      },
-      {
-          q: "Microcomputers are also known as:",
-          options: ["Laptops", "Supercomputers", "Desktop computers", "Mainframes"],
-          answer: 2,
-          chapter: "Chapter 1: Types of Computers"
-      },
-      {
-          q: "A tablet computer can be operated using a finger or a special pen called a:",
-          options: ["Stylus", "Cursor", "Pointer", "Joystick"],
-          answer: 0,
-          chapter: "Chapter 1: Types of Computers"
-      },
-      {
-          q: "Which of the following is an example of a handheld computer (palm-top)?",
-          options: ["ENIAC", "Nintendo DS", "IBM PC", "Supercomputer"],
-          answer: 1,
-          chapter: "Chapter 1: Types of Computers"
-      },
-      {
-          q: "First-generation computers were based on which core electronic component?",
-          options: ["Transistors", "Vacuum Tubes", "Integrated Circuits (ICs)", "Microprocessors"],
-          answer: 1,
-          chapter: "Chapter 1: History of Computers"
-      },
-      {
-          q: "Second-generation computers used which programming language?",
-          options: ["Machine language", "Assembly language", "High-level language (FORTRAN/BASIC)", "Python"],
-          answer: 1,
-          chapter: "Chapter 1: History of Computers"
-      },
-      {
-          q: "Integrated Circuits (ICs) were introduced in which generation of computers?",
-          options: ["First-generation", "Second-generation", "Third-generation", "Fourth-generation"],
-          answer: 2,
-          chapter: "Chapter 1: History of Computers"
-      },
-      {
-          q: "VLSI (Very Large Scale Integration) technology and microprocessors are characteristics of:",
-          options: ["Second-generation computers", "Third-generation computers", "Fourth-generation computers", "First-generation computers"],
-          answer: 2,
-          chapter: "Chapter 1: History of Computers"
-      },
-      {
-          q: "Fifth-generation computers rely on which main technology component?",
-          options: ["Vacuum Tubes", "Artificial Intelligence (AI) and ULSI", "Transistors", "Punched Cards"],
-          answer: 1,
-          chapter: "Chapter 1: History of Computers"
-      },
-      {
-          q: "What does NADRA stand for?",
-          options: ["National Data and Record Authority", "National Database and Registration Authority", "Network Data and Research Association", "National Digital and Resource Agency"],
-          answer: 1,
-          chapter: "Chapter 1: ICT Applications"
-      },
-      {
-          q: "Which of the following is considered a disadvantage of ICT?",
-          options: ["Saves time and money", "Causes distraction and exposure to incorrect information", "Allows access to educational resources easily", "Makes message delivery faster"],
-          answer: 1,
-          chapter: "Chapter 1: Advantages and Disadvantages of ICT"
-      },
-      {
-          q: "Electronic timing devices, thermostats, and weather forecasting barometers are examples of ICT in:",
-          options: ["Education", "Measurements", "Entertainment", "Banking"],
-          answer: 1,
-          chapter: "Chapter 1: Role of ICT"
-      },
-      {
-          q: "WhatsApp, Facebook Messenger, Skype, and Zoom are examples of:",
-          options: ["Measurement applications", "Communication applications", "Manufacturing robots", "Storage devices"],
-          answer: 1,
-          chapter: "Chapter 1: Role of ICT"
-      },
-
-      // Chapter 3: Operating Systems (approx 17 questions)
-      {
-          q: "A set of programmes that helps computer hardware work with other computer software is called an:",
-          options: ["Application Software", "Operating System (OS)", "Utility Software", "Hardware Driver"],
-          answer: 1,
-          chapter: "Chapter 3: Operating Systems"
-      },
-      {
-          q: "The CPU's first task when you switch on the computer is loading the:",
-          options: ["Web Browser", "Drivers", "Operating System", "Application Programs"],
-          answer: 2,
-          chapter: "Chapter 3: Operating Systems"
-      },
-      {
-          q: "Set of system programmes through which hardware components communicate with the Operating System are called:",
-          options: ["Command Interpreters", "File Managers", "Drivers", "Processors"],
-          answer: 2,
-          chapter: "Chapter 3: Operating Systems"
-      },
-      {
-          q: "Which function of an OS is responsible for loading programmes into RAM and allocating CPU processing time?",
-          options: ["File Management", "Process Management", "Security Management", "Input and Output Management"],
-          answer: 1,
-          chapter: "Chapter 3: OS Functions"
-      },
-      {
-          q: "Reallocating memory from terminated processes to new processes is handled by:",
-          options: ["Resource Management", "Memory Management", "Command Interpreter", "Input Management"],
-          answer: 1,
-          chapter: "Chapter 3: OS Functions"
-      },
-      {
-          q: "The OS component that reads instructions given by the user and translates them so the computer can execute them is the:",
-          options: ["File Manager", "Memory Manager", "Command Interpreter", "Security Manager"],
-          answer: 2,
-          chapter: "Chapter 3: OS Functions"
-      },
-      {
-          q: "Which type of operating system allows only one user to perform one task at a time?",
-          options: ["Multi-User Operating System", "Single-User Operating System", "Network Operating System", "Distributed Operating System"],
-          answer: 1,
-          chapter: "Chapter 3: Types of OS"
-      },
-      {
-          q: "Examples of Multiple User Operating Systems include:",
-          options: ["MS-DOS only", "UNIX, MVS, etc.", "Windows 95 only", "Android only"],
-          answer: 1,
-          chapter: "Chapter 3: Types of OS"
-      },
-      {
-          q: "MS-DOS stands for:",
-          options: ["Multi-System Disk Operating System", "Microsoft Disk Operating System", "Main Digital Operating System", "Micro System Data Operating System"],
-          answer: 1,
-          chapter: "Chapter 3: MS-DOS"
-      },
-      {
-          q: "In MS-DOS, which command is used to clear the screen?",
-          options: ["COPY", "DEL", "CLS", "DIR"],
-          answer: 2,
-          chapter: "Chapter 3: DOS Commands"
-      },
-      {
-          q: "The DOS command used to show or change the current working directory is:",
-          options: ["CD and CHDIR", "DEL and ERASE", "DISKCOPY", "DEBUG"],
-          answer: 0,
-          chapter: "Chapter 3: DOS Commands"
-      },
-      {
-          q: "Microsoft Windows was developed by Microsoft in which year as a graphical operating system?",
-          options: ["1981", "1985", "1995", "1984"],
-          answer: 1,
-          chapter: "Chapter 3: Microsoft Windows"
-      },
-      {
-          q: "Which operating system was developed by Apple Inc. in 1984 for Macintosh computers?",
-          options: ["Linux", "MacOS", "Android", "UNIX"],
-          answer: 1,
-          chapter: "Chapter 3: MacOS"
-      },
-      {
-          q: "Android OS was introduced by Google for touch screen devices in which year?",
-          options: ["2005", "2008", "2010", "2012"],
-          answer: 1,
-          chapter: "Chapter 3: Mobile OS"
-      },
-      {
-          q: "What displays running programmes at the current moment and allows them to be opened, closed, or pinned?",
-          options: ["Start Menu", "Taskbar", "Task View", "Search Bar"],
-          answer: 1,
-          chapter: "Chapter 3: Windows Interface"
-      },
-      {
-          q: "A small graphical representation of a programme or file is called an:",
-          options: ["Icon", "Extension", "Attribute", "Folder"],
-          answer: 0,
-          chapter: "Chapter 3: File Management"
-      },
-      {
-          q: "The ending of a file name that represents the type of file (e.g., .doc, .png) is called its:",
-          options: ["Size", "Extension", "Folder", "Label"],
-          answer: 1,
-          chapter: "Chapter 3: File Management"
-      },
-      {
-          q: "A space used to store files, other folders, and shortcuts on a computer is called a:",
-          options: ["File", "Folder (Directory)", "Extension", "Driver"],
-          answer: 1,
-          chapter: "Chapter 3: File Management"
-      },
-      {
-          q: "Which bar in File Explorer shows how many items are in a folder and how many items are selected?",
-          options: ["Address bar", "Status bar", "Toolbar", "Navigation Pane"],
-          answer: 1,
-          chapter: "Chapter 3: File Explorer"
-      },
-      {
-          q: "When you copy a file or folder using Copy-Paste, what happens to the original file?",
-          options: ["It is deleted from the source folder", "It remains in the source and a copy goes to the new destination", "It moves permanently to the Recycle Bin", "It gets renamed automatically"],
-          answer: 1,
-          chapter: "Chapter 3: File Management Operations"
-      },
-
-      // Chapter 5: Working with Spreadsheets (MS Excel) (13 questions)
-      {
-          q: "Microsoft Excel is a spreadsheet programme developed by Microsoft for:",
-          options: ["Windows and macOS only", "Android and iOS only", "Windows, macOS, Android, and iOS", "Linux and UNIX only"],
-          answer: 2,
-          chapter: "Chapter 5: MS Excel Basics"
-      },
-      {
-          q: "The macro programming language featured in MS Excel is called:",
-          options: ["Python", "Java", "VBA", "C++"],
-          answer: 2,
-          chapter: "Chapter 5: MS Excel Basics"
-      },
-      {
-          q: "In Microsoft Excel, a workbook is defined as a collection of:",
-          options: ["Word documents", "One or more spreadsheets/worksheets", "PowerPoint presentations", "Image files"],
-          answer: 1,
-          chapter: "Chapter 5: Workbooks & Worksheets"
-      },
-      {
-          q: "Which of the following default commands is located on the Quick Access Toolbar?",
-          options: ["Cut, Copy, and Paste", "Save, Undo, and Repeat", "Insert, Delete, and Format", "Merge, Center, and Wrap Text"],
-          answer: 1,
-          chapter: "Chapter 5: Excel Interface"
-      },
-      {
-          q: "The view that gives you various options for saving, opening a file, printing, and sharing workbooks is called:",
-          options: ["Frontstage View", "Backstage View", "Layout View", "Normal View"],
-          answer: 1,
-          chapter: "Chapter 5: Backstage View"
-      },
-      {
-          q: "A pre-designed spreadsheet that can be used to create a new workbook quickly is called a:",
-          options: ["Layout", "Document", "Template", "Format"],
-          answer: 2,
-          chapter: "Chapter 5: Templates"
-      },
-      {
-          q: "All data and information in an Excel workbook is entered into rectangular blocks called:",
-          options: ["Columns", "Rows", "Cells", "Tabs"],
-          answer: 2,
-          chapter: "Chapter 5: Working with Cells"
-      },
-      {
-          q: "Columns in an Excel worksheet are identified by:",
-          options: ["Numbers (1, 2, 3...)", "Letters (A, B, C...)", "Roman Numerals (I, II, III...)", "Symbols (@, #, $...)"],
-          answer: 1,
-          chapter: "Chapter 5: Working with Cells"
-      },
-      {
-          q: "If a cell intersects column C and row 5, what is its cell address?",
-          options: ["5C", "C-5", "C5", "Cell5"],
-          answer: 2,
-          chapter: "Chapter 5: Working with Cells"
-      },
-      {
-          q: "The selected cell address appears automatically in the:",
-          options: ["Formula Bar", "Status Bar", "Name Box", "Title Bar"],
-          answer: 2,
-          chapter: "Chapter 5: Excel Interface"
-      },
-      {
-          q: "To delete cell content while keeping the cell itself, which command is used on the Home tab?",
-          options: ["Delete Cells", "Clear Contents", "Remove Data", "Cut"],
-          answer: 1,
-          chapter: "Chapter 5: Editing Cells"
-      },
-      {
-          q: "When you copy cell content using Ctrl+C and paste it using Ctrl+V, what appears around the copied cell?",
-          options: ["A solid red border", "A dashed box around it", "A double blue outline", "The cell turns black"],
-          answer: 1,
-          chapter: "Chapter 5: Copy and Paste"
-      },
-      {
-          q: "Which command on the Home tab allows you to apply pre-designed styles like Heading 1, 20% - Accent1, or Good/Bad/Neutral to a cell?",
-          options: ["Cell Styles", "Number Format", "Format Painter", "Conditional Formatting"],
-          answer: 0,
-          chapter: "Chapter 5: Formatting Cells"
-      },
-      {
-          q: "The Currency Number Format in Excel automatically adds currency symbols ($) and displays:",
-          options: ["One decimal place", "Two decimal places", "Three decimal places", "No decimal places"],
-          answer: 1,
-          chapter: "Chapter 5: Number Formats"
-      },
-      {
-          q: "Most mostly, Excel stores date format as:",
-          options: ["day/month/year", "month/day/year", "year/month/day", "year/day/month"],
-          answer: 1,
-          chapter: "Chapter 5: Date Formats"
-      }
-  ];
-
-  let shuffledQuiz = [];
-  let currentQuestionIndex = 0;
-  let userAnswers = {};
-  let candidateData = { name: '', date: '' };
-  let timerInterval = null;
-  let timeRemaining = 45 * 60; // 45 Minutes in seconds
-
-  // Set default date to today
-  document.getElementById('candidate-date').valueAsDate = new Date();
-
-  // Handle Registration form submission
-  document.getElementById('registration-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const nameInput = document.getElementById('candidate-name').value.trim();
-      const dateInput = document.getElementById('candidate-date').value;
-
-      if(!nameInput) {
-          alert('Please enter your full name to proceed.');
-          return;
-      }
-
-      candidateData.name = nameInput;
-      candidateData.date = dateInput;
-
-      // Randomize questions using Fisher-Yates shuffle algorithm
-      shuffledQuiz = [...masterQuestions].sort(() => Math.random() - 0.5);
-
-      // Transition UI
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('quiz-screen').style.display = 'block';
-      document.getElementById('timer-box').style.display = 'flex';
-
-      startTimer();
-      loadQuestion();
-  });
-
-  // Real-time Countdown Timer
-  function startTimer() {
-      timerInterval = setInterval(() => {
-          if(timeRemaining <= 0) {
-              clearInterval(timerInterval);
-              alert('Time is up! Your assessment will now be automatically submitted.');
-              submitQuiz(true);
-              return;
-          }
-          timeRemaining--;
-          let minutes = Math.floor(timeRemaining / 60);
-          let seconds = timeRemaining % 60;
-          document.getElementById('time-display').innerText = 
-              `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-      }, 1000);
-  }
-
-// Load Question Function
-function loadQuestion() {
-    const qObj = shuffledQuiz[currentQuestionIndex];
-    
-    // Progress Bar Update
-    let progressPercent = ((currentQuestionIndex + 1) / shuffledQuiz.length) * 100;
-    document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
-
-    // Tracker & Chapter tag
-    document.getElementById('question-tracker').innerText = `Question ${currentQuestionIndex + 1} of ${shuffledQuiz.length}`;
-    document.getElementById('question-chapter-tag').innerText = qObj.chapter;
-    document.getElementById('question-text').innerText = qObj.q;
-
-    // Render Options
-    const optionsContainer = document.getElementById('options-container');
-    optionsContainer.innerHTML = '';
-
-    qObj.options.forEach((optText, index) => {
-        const isSelected = userAnswers[currentQuestionIndex] === index;
-        const label = document.createElement('label');
-        label.className = `option-label ${isSelected ? 'selected' : ''}`;
-        label.innerHTML = `
+            {
+            q: "In what kind of environment are Mainframe computers most extensively utilized?",
+            options: ["Personal home desks", "Commercial databases and real-time transaction servers", "Handheld mobile gaming", "Single-user basic word processing"],
+            answer: 1,
+            chapter: "Chapter 1: Types of Computers",
+            explanation: "Mainframes handle billions of simple calculations and transactions for high-resiliency commercial databases."
+            },
+            {
+            q: "Personal desktop computers commonly found in houses and offices fall under which computer category?",
+            options: ["Microcomputer", "Supercomputer", "Mainframe", "Minicomputer"],
+            answer: 0,
+            chapter: "Chapter 1: Types of Computers",
+            explanation: "Personal computers designed for home and personal use are classified as microcomputers."
+            },
+            {
+            q: "What special input tool is utilized to operate a Tablet Computer alongside finger touch?",
+            options: ["Joystick", "Stylus", "Light Pen Trackball", "Punch Card"],
+            answer: 1,
+            chapter: "Chapter 1: Types of Computers",
+            explanation: "A tablet features a touchscreen interface operated either by a finger or a special pen called a stylus."
+            },
+            {
+            q: "Which of these devices is explicitly identified in your curriculum as a Handheld Computer (palm-top)?",
+            options: ["ENIAC", "Nintendo DS", "IBM 701", "Cray Supercomputer"],
+            answer: 1,
+            chapter: "Chapter 1: Types of Computers",
+            explanation: "Handheld computers include smartphones, GPS devices, Nintendo DS, and iPods, which can be stored in a pocket."
+            },
+            {
+            q: "The primary electronic valve component powering First-Generation computers was the:",
+            options: ["Transistor", "Vacuum Tube", "Integrated Circuit", "Microprocessor"],
+            answer: 1,
+            chapter: "Chapter 1: Computer History",
+            explanation: "First-generation computers were massive, slow, and built using Vacuum Tubes."
+            },
+            {
+            q: "Second-generation computer architecture replaced vacuum tubes with which superior component?",
+            options: ["Transistors", "Silicon Chips", "VLSI microchips", "Magnetic Drums"],
+            answer: 0,
+            chapter: "Chapter 1: Computer History",
+            explanation: "Second-generation machines utilized Transistors, providing improved speed and reduced size."
+            },
+            {
+            q: "Third-generation computers are famously characterized by the introduction of:",
+            options: ["Vacuum Tubes", "Machine Code Only", "Integrated Circuits (ICs)", "Artificial Intelligence"],
+            answer: 2,
+            chapter: "Chapter 1: Computer History",
+            explanation: "Integrated Circuits (ICs) made third-generation computers smaller, faster, and more reliable."
+            },
+            {
+            q: "Which technological breakthrough defines Fourth-Generation computers?",
+            options: ["Magnetic Tapes", "Very Large Scale Integration (VLSI) and Microprocessors", "Assembly language wiring", "Punch cards"],
+            answer: 1,
+            chapter: "Chapter 1: Computer History",
+            explanation: "Fourth-generation systems feature thousands of transistors packed onto a single microchip via VLSI."
+            },
+            {
+            q: "Fifth-generation computing systems base their advanced architecture heavily on:",
+            options: ["Mechanical gears", "Vacuum tubes", "Artificial Intelligence (AI) and ULSI", "Punched paper tape"],
+            answer: 2,
+            chapter: "Chapter 1: Computer History",
+            explanation: "Fifth-generation computers leverage Artificial Intelligence and Ultra Large-Scale Integration (ULSI)."
+            },
+            {
+            q: "What organization does the abbreviation **NADRA** represent in Pakistan's ICT context?",
+            options: ["National Data and Record Agency", "National Database and Registration Authority", "Network Digital Research Association", "National Device Registration Authority"],
+            answer: 1,
+            chapter: "Chapter 1: ICT Applications",
+            explanation: "NADRA stands for National Database and Registration Authority, which compiles data for Computerized National Identity Cards (CNIC)."
+            },
+            {
+            q: "Which of the following is highlighted as a negative consequence or disadvantage of ICT?",
+            options: ["Increased global interconnectivity", "Enhanced automation in businesses", "Exposure to security challenges, privacy issues, and distractions", "Lower cost of remote communications"],
+            answer: 2,
+            chapter: "Chapter 1: ICT Advantages/Disadvantages",
+            explanation: "While ICT has many benefits, security challenges, distractions, and privacy issues are major noted disadvantages."
+            },
+            {
+            q: "Weather forecasting barometers and electronic thermostats are real-world examples of ICT applied in:",
+            options: ["Medical Science", "Measurements", "Manufacturing automation", "Banking and Finance"],
+            answer: 1,
+            chapter: "Chapter 1: Role of ICT",
+            explanation: "Measurement applications developed in ICT handle pressure, radiation, and temperature tracking."
+            },
+            
+            // Chapter 3: Operating Systems (17 Questions)
+            {
+            q: "What is the primary role of an Operating System (OS) on a computer system?",
+            options: ["To design web graphics", "To act as an interface between computer hardware and user software", "To compile video games only", "To act as a physical motherboard component"],
+            answer: 1,
+            chapter: "Chapter 3: Operating Systems",
+            explanation: "An OS is a system program that makes hardware work with software and manages system resources."
+            },
+            {
+            q: "What is the very first task performed by the CPU when a computer system is switched on?",
+            options: ["Opening Microsoft Word", "Loading the Operating System", "Connecting to Wi-Fi", "Checking printer ink levels"],
+            answer: 1,
+            chapter: "Chapter 3: OS Booting",
+            explanation: "The computer system cannot work without an OS; hence loading the operating system is the CPU's primary initialization task."
+            },
+            {
+            q: "System software programs that enable hardware components to talk directly to the OS are known as:",
+            options: ["Compilers", "Drivers", "Spreadsheets", "Browsers"],
+            answer: 1,
+            chapter: "Chapter 3: OS Components",
+            explanation: "Drivers enable one or more hardware devices to communicate seamlessly with the operating system."
+            },
+            {
+            q: "Which OS management function allocates RAM and handles CPU processing time slices?",
+            options: ["File Management", "Memory Management", "Security Management", "Output Management"],
+            answer: 1,
+            chapter: "Chapter 3: OS Functions",
+            explanation: "Memory Management oversees allocation and reallocation of main memory for running programs."
+            },
+            {
+            q: "What component of an operating system accepts text commands typed by the user and translates them for execution?",
+            options: ["File Explorer", "Command Interpreter", "Desktop Wallpaper", "Notification Bar"],
+            answer: 1,
+            chapter: "Chapter 3: OS Functions",
+            explanation: "The command interpreter reads text instructions from the user and translates them so the system executes them."
+            },
+            {
+            q: "An operating system designed to let a single user handle one task at a time is classified as a:",
+            options: ["Multi-User OS", "Single-User OS", "Network OS", "Distributed OS"],
+            answer: 1,
+            chapter: "Chapter 3: Types of OS",
+            explanation: "Single-user operating systems are simple, easy to maintain, and perform one task at a time for an individual."
+            },
+            {
+            q: "Which of the following is a classic example of a Multi-User Operating System used in large organizations?",
+            options: ["MS-DOS", "UNIX / MVS", "Windows 95 single user mode", "Notepad"],
+            answer: 1,
+            chapter: "Chapter 3: Types of OS",
+            explanation: "Multi-user operating systems like UNIX apply complex techniques to share resources among multiple users in offices or airports."
+            },
+            {
+            q: "What does the abbreviation **MS-DOS** stand for in computing history?",
+            options: ["Multi-Session Disk Operating System", "Microsoft Disk Operating System", "Main System Digital Open Source", "Micro Storage Directory Operator"],
+            answer: 1,
+            chapter: "Chapter 3: MS-DOS",
+            explanation: "MS-DOS stands for Microsoft Disk Operating System, one of the earliest command-line interfaces for PCs."
+            },
+            {
+            q: "In an MS-DOS command prompt environment, which command clears everything currently displayed on screen?",
+            options: ["DIR", "COPY", "CLS", "DEL"],
+            answer: 2,
+            chapter: "Chapter 3: DOS Commands",
+            explanation: "CLS stands for Clear Screen and is used to wipe the command interpreter window clean."
+            },
+            {
+            q: "Which DOS command sequence is used to show or change the current working directory?",
+            options: ["CD and CHDIR", "DEL and ERASE", "DISKCOPY", "BREAK"],
+            answer: 0,
+            chapter: "Chapter 3: DOS Commands",
+            explanation: "The CD (Change Directory) or CHDIR command displays or modifies your active working path."
+            },
+            {
+            q: "In what year did Microsoft launch its milestone graphical operating system, Microsoft Windows?",
+            options: ["1975", "1981", "1985", "1995"],
+            answer: 2,
+            chapter: "Chapter 3: Microsoft Windows",
+            explanation: "Microsoft Windows was introduced in 1985 as a graphical interface to supersede text-only prompts."
+            },
+            {
+            q: "Apple developed which legendary operating system in 1984 specifically for its Macintosh computers?",
+            options: ["Linux", "MacOS", "Android", "Solaris"],
+            answer: 1,
+            chapter: "Chapter 3: MacOS",
+            explanation: "MacOS was launched in 1984 as the primary operating system for Apple desktop and laptop lines."
+            },
+            {
+            q: "Google introduced which mobile operating system for touch-screen smartphones and tablets in 2008?",
+            options: ["Windows Mobile", "Android", "iOS", "BlackBerry OS"],
+            answer: 1,
+            chapter: "Chapter 3: Android OS",
+            explanation: "Android is a mobile-based operating system introduced by Google in 2008."
+            },
+            {
+            q: "The bottom bar on a Windows desktop that displays currently running programs and pinned shortcuts is called the:",
+            options: ["Taskbar", "Status Bar", "Title Bar", "Scroll Bar"],
+            answer: 0,
+            chapter: "Chapter 3: Windows Desktop",
+            explanation: "The Taskbar displays active programs and allows users to pin applications for fast access."
+            },
+            {
+            q: "A small graphical symbol or picture that represents a program, file, or shortcut on your screen is a:",
+            options: ["Folder", "Icon", "Widget", "Task view"],
+            answer: 1,
+            chapter: "Chapter 3: Icons & Folders",
+            explanation: "An icon is a small graphical representation that opens its associated file or program when double-clicked."
+            },
+            {
+            q: "The suffix at the end of a filename (such as `.png` or `.docx`) that defines its file type is known as the:",
+            options: ["Directory", "Extension", "Attribute", "Shortcut"],
+            answer: 1,
+            chapter: "Chapter 3: File Extensions",
+            explanation: "A file extension tells the operating system what kind of program should open that specific file."
+            },
+            {
+            q: "When you execute a standard Copy and Paste operation on a file, what happens to the original source file?",
+            options: ["It gets permanently deleted", "It remains in place while a duplicate is placed in the destination", "It moves to the Recycle Bin", "It is automatically compressed into a zip folder"],
+            answer: 1,
+            chapter: "Chapter 3: File Management",
+            explanation: "Copying creates a duplicate; the original file remains untouched in its source location."
+            },
+            
+            // Chapter 5: Working with Spreadsheets (16 Questions)
+            {
+            q: "Microsoft Excel is a powerful software application categorized specifically as a:",
+            options: ["Word processor", "Spreadsheet programme", "Database management server", "Presentation creator"],
+            answer: 1,
+            chapter: "Chapter 5: Excel Basics",
+            explanation: "Excel is a spreadsheet application used to record, calculate, and analyze numerical and statistical data."
+            },
+            {
+            q: "What is the name of the built-in macro programming language supported inside Microsoft Excel?",
+            options: ["Python", "JavaScript", "VBA (Visual Basic for Applications)", "Swift"],
+            answer: 2,
+            chapter: "Chapter 5: Excel Features",
+            explanation: "Excel features a powerful macro programming language called VBA for advanced automation."
+            },
+            {
+            q: "In MS Excel terminology, an entire workbook file is built as a collection of one or more:",
+            options: ["Slides", "Worksheets / Spreadsheets", "Documents", "Database tables"],
+            answer: 1,
+            chapter: "Chapter 5: Workbooks",
+            explanation: "An Excel workbook is a file containing one or more worksheets to organize data efficiently."
+            },
+            {
+            q: "Which default utility features commands like Save, Undo, and Repeat for quick access?",
+            options: ["The Ribbon", "Quick Access Toolbar", "Status Bar", "Formula Bar"],
+            answer: 1,
+            chapter: "Chapter 5: Excel Interface",
+            explanation: "The Quick Access Toolbar sits above the Ribbon and houses frequent commands like Save and Undo."
+            },
+            {
+            q: "Which Excel view provides options for printing, saving, sharing, and opening workbook files?",
+            options: ["Normal View", "Backstage View", "Page Layout View", "Formula View"],
+            answer: 1,
+            chapter: "Chapter 5: Backstage View",
+            explanation: "Clicking the File tab opens the Backstage view for file management operations."
+            },
+            {
+            q: "A pre-formatted spreadsheet template used to jump-start workbook creation is referred to simply as a:",
+            options: ["Macro", "Template", "Layout", "Formula"],
+            answer: 1,
+            chapter: "Chapter 5: Templates",
+            explanation: "A template is a pre-designed spreadsheet with custom formatting and formulas ready for quick data entry."
+            },
+            {
+            q: "The individual rectangular boxes formed by the intersection of rows and columns in a worksheet are called:",
+            options: ["Blocks", "Cells", "Grids", "Pads"],
+            answer: 1,
+            chapter: "Chapter 5: Cells",
+            explanation: "Cells are the basic building blocks of an Excel spreadsheet where data is entered."
+            },
+            {
+            q: "How are individual columns identified across the top of an Excel worksheet?",
+            options: ["Numbers (1, 2, 3...)", "Letters (A, B, C...)", "Roman numerals (I, II, III...)", "Symbols (*, #, @)"],
+            answer: 1,
+            chapter: "Chapter 5: Columns & Rows",
+            explanation: "Columns are identified by letters (A, B, C...) while rows are identified by numbers (1, 2, 3...)."
+            },
+            {
+            q: "If your active cell is located where column D meets row 8, what is its correct cell address?",
+            options: ["8D", "D-8", "D8", "CellD8"],
+            answer: 2,
+            chapter: "Chapter 5: Cell Address",
+            explanation: "Cell addresses always combine the column letter followed by the row number (e.g., D8)."
+            },
+            {
+            q: "Where is the active cell's address automatically displayed on the Excel screen interface?",
+            options: ["Status Bar", "Name Box", "Formula Bar", "Taskbar"],
+            answer: 1,
+            chapter: "Chapter 5: Name Box",
+            explanation: "The Name Box displays the reference of the currently selected cell."
+            },
+            {
+            q: "To remove data content from a cell while keeping the cell structure intact on the worksheet, you use:",
+            options: ["Delete Cell command", "Clear Contents", "Cut command", "Erase Sheet"],
+            answer: 1,
+            chapter: "Chapter 5: Editing Cells",
+            explanation: "Clear Contents removes text or values from a cell without deleting the cell itself."
+            },
+            {
+            q: "What visual indicator appears around a cell or range when you trigger the Copy command (Ctrl+C)?",
+            options: ["A solid red line", "A flashing/dashed box border", "A glowing yellow shade", "The cell turns completely black"],
+            answer: 1,
+            chapter: "Chapter 5: Copy Operations",
+            explanation: "A moving dashed border surrounds the copied cells until you paste or cancel."
+            },
+            {
+            q: "Which feature on the Home tab lets you instantly apply pre-designed formatting styles like 'Heading 1' or 'Good/Bad/Neutral'?",
+            options: ["Cell Styles", "Conditional Formatting", "Format Painter", "Number Format"],
+            answer: 0,
+            chapter: "Chapter 5: Formatting",
+            explanation: "Cell Styles allow rapid professional formatting of table headers and values."
+            },
+            {
+            q: "The Currency number format in Excel automatically displays values with a currency symbol and how many decimal places?",
+            options: ["Zero decimal places", "One decimal place", "Two decimal places", "Four decimal places"],
+            answer: 2,
+            chapter: "Chapter 5: Number Formats",
+            explanation: "Currency format automatically formats numerical inputs with a dollar/currency sign and two decimal places."
+            },
+            {
+            q: "By default, how does Microsoft Excel store and display standard date entries?",
+            options: ["day/month/year", "month/day/year", "year/month/day", "year/day/month"],
+            answer: 1,
+            chapter: "Chapter 5: Date Formatting",
+            explanation: "Excel's default standard date structure is organized as month/day/year format."
+            },
+            {
+            q: "Which bar located at the bottom of the Excel window shows worksheet tab navigation and view controls?",
+            options: ["Formula Bar", "Status Bar / Sheet Tabs", "Name Box", "Quick Access Toolbar"],
+            answer: 1,
+            chapter: "Chapter 5: Excel Windows",
+            explanation: "Worksheet tabs and view controls are located at the bottom status bar area."
+            }
+            ];
+            let shuffledQuiz = [];
+            let currentQuestionIndex = 0;
+            let userAnswers = {};
+            let candidateName = '';
+            let timerInterval = null;
+            let timeRemaining = 45 * 60; // 45 Minutes
+            
+            // Handle Registration form submission
+            document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('candidate-name').value.trim();
+            
+            if(!nameInput) {
+            alert('Please enter your full name to proceed.');
+            return;
+            }
+            
+            candidateName = nameInput;
+            
+            // Randomize questions using Fisher-Yates shuffle algorithm
+            shuffledQuiz = [...masterQuestions].sort(() => Math.random() - 0.5);
+            
+            // Transition UI
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'block';
+            document.getElementById('timer-box').style.display = 'flex';
+            
+            startTimer();
+            loadQuestion();
+            });
+            
+            // Real-time Countdown Timer
+            function startTimer() {
+            timerInterval = setInterval(() => {
+            if(timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert('Time is up! Your assessment will now be automatically submitted.');
+            submitQuiz();
+            return;
+            }
+            timeRemaining--;
+            let minutes = Math.floor(timeRemaining / 60);
+            let seconds = timeRemaining % 60;
+            document.getElementById('time-display').innerText = 
+            `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            }, 1000);
+            }
+            
+            // Load Question Function
+            function loadQuestion() {
+            const qObj = shuffledQuiz[currentQuestionIndex];
+            
+            // Progress Bar Update
+            let progressPercent = ((currentQuestionIndex + 1) / shuffledQuiz.length) * 100;
+            document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+            
+            // Tracker & Chapter tag
+            document.getElementById('question-tracker').innerText = `Question ${currentQuestionIndex + 1} of ${shuffledQuiz.length}`;
+            document.getElementById('question-chapter-tag').innerText = qObj.chapter;
+            document.getElementById('question-text').innerText = qObj.q;
+            
+            // Render Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            qObj.options.forEach((optText, index) => {
+            const isSelected = userAnswers[currentQuestionIndex] === index;
+            const label = document.createElement('label');
+            label.className = `option-label ${isSelected ? 'selected' : ''}`;
+            label.innerHTML = `
             <input type="radio" name="question-option" value="${index}" ${isSelected ? 'checked' : ''} onchange="selectOption(${index})">
             <span>${String.fromCharCode(65 + index)}) ${optText}</span>
-        `;
-        optionsContainer.appendChild(label);
-    });
-
-    // Button visibility controls
-    document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
-    if(currentQuestionIndex === shuffledQuiz.length - 1) {
-        document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('submit-btn').style.display = 'block';
-    } else {
-        document.getElementById('next-btn').style.display = 'block';
-        document.getElementById('submit-btn').style.display = 'none';
-    }
-}
-
-// Record user selection
-function selectOption(optionIndex) {
-    userAnswers[currentQuestionIndex] = optionIndex;
-    // Update UI selection class styling
-    const labels = document.querySelectorAll('.option-label');
-    labels.forEach((lbl, idx) => {
-        if(idx === optionIndex) {
+            `;
+            optionsContainer.appendChild(label);
+            });
+            
+            // Button visibility controls
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            if(currentQuestionIndex === shuffledQuiz.length - 1) {
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('submit-btn').style.display = 'block';
+            } else {
+            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('submit-btn').style.display = 'none';
+            }
+            }
+            
+            // Record user selection
+            function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            const labels = document.querySelectorAll('.option-label');
+            labels.forEach((lbl, idx) => {
+            if(idx === optionIndex) {
             lbl.classList.add('selected');
-        } else {
+            } else {
             lbl.classList.remove('selected');
-        }
-    });
-}
-
-function nextQuestion() {
-    if(currentQuestionIndex < shuffledQuiz.length - 1) {
-        currentQuestionIndex++;
-        loadQuestion();
-    }
-}
-
-function prevQuestion() {
-    if(currentQuestionIndex > 0) {
-        currentQuestionIndex--;
-        loadQuestion();
-    }
-}
-
-function confirmSubmission() {
-    let answeredCount = Object.keys(userAnswers).length;
-    let unassigned = shuffledQuiz.length - answeredCount;
-    let msg = unassigned > 0 ? 
-        `You have left ${unassigned} question(s) unanswered. Are you sure you want to submit?` : 
-        `Are you sure you want to finalize and submit your assessment?`;
-    
-    if(confirm(msg)) {
-        submitQuiz(false);
-    }
-}
-
-// Calculation & Result Generation
-function submitQuiz(isTimeOut) {
-    clearInterval(timerInterval);
-
-    let score = 0;
-    shuffledQuiz.forEach((qObj, idx) => {
-        if(userAnswers[idx] === qObj.answer) {
+            }
+            });
+            }
+            
+            function nextQuestion() {
+            if(currentQuestionIndex < shuffledQuiz.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+            }
+            }
+            
+            function prevQuestion() {
+            if(currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            loadQuestion();
+            }
+            }
+            
+            function confirmSubmission() {
+            let answeredCount = Object.keys(userAnswers).length;
+            let unassigned = shuffledQuiz.length - answeredCount;
+            let msg = unassigned > 0 ? 
+            `You have left ${unassigned} question(s) unanswered. Are you sure you want to submit?` : 
+            `Are you sure you want to finalize and submit your assessment?`;
+            
+            if(confirm(msg)) {
+            submitQuiz();
+            }
+            }
+            
+            // Evaluation & Detailed Mistake Review Generation
+            function submitQuiz() {
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            let mistakesList = [];
+            
+            shuffledQuiz.forEach((qObj, idx) => {
+            const userChoice = userAnswers[idx];
+            if(userChoice === qObj.answer) {
             score++;
-        }
-    });
-
-    let percentage = Math.round((score / shuffledQuiz.length) * 100);
-    let status = percentage >= 50 ? "Passed" : "Needs Revision";
-    let statusColor = percentage >= 50 ? "var(--success)" : "var(--danger)";
-
-    // Update Results Screen UI
-    document.getElementById('result-candidate-info').innerHTML = 
-        `<i class="fa-solid fa-user-graduate"></i> Candidate: <b>${escapeHtml(candidateData.name)}</b> &nbsp;|&nbsp; <i class="fa-solid fa-calendar"></i> Date: <b>${candidateData.date}</b>`;
-    
-    document.getElementById('res-score').innerText = `${score} / ${shuffledQuiz.length}`;
-    document.getElementById('res-percentage').innerText = `${percentage}%`;
-    
-    let statusEl = document.getElementById('res-status');
-    statusEl.innerText = status;
-    statusEl.style.color = statusColor;
-
-    // Display Results Screen
-    document.getElementById('quiz-screen').style.display = 'none';
-    document.getElementById('timer-box').style.display = 'none';
-    document.getElementById('results-screen').style.display = 'block';
-}
-
-function escapeHtml(text) {
-    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-}
-    </script>
-</body>
-</html>
+            } else {
+            mistakesList.push({
+            qNumber: idx + 1,
+            question: qObj.q,
+            chapter: qObj.chapter,
+            userAnswer: userChoice !== undefined ? `${String.fromCharCode(65 + userChoice)}) ${qObj.options[userChoice]}` : "No Answer Provided",
+            correctAnswer: `${String.fromCharCode(65 + qObj.answer)}) ${qObj.options[qObj.answer]}`,
+            explanation: qObj.explanation
+            });
+            }
+            });
+            
+            let percentage = Math.round((score / shuffledQuiz.length) * 100);
+            let status = percentage >= 50 ? "Passed" : "Needs Revision";
+            let statusColor = percentage >= 50 ? "var(--success)" : "var(--danger)";
+            
+            // Update Results Header UI
+            document.getElementById('result-candidate-info').innerHTML = 
+            `<i class="fa-solid fa-user-graduate"></i> Candidate: <b>${escapeHtml(candidateName)}</b>`;
+            
+            document.getElementById('res-score').innerText = `${score} / ${shuffledQuiz.length}`;
+            document.getElementById('res-percentage').innerText = `${percentage}%`;
+            
+            let statusEl = document.getElementById('res-status');
+            statusEl.innerText = status;
+            statusEl.style.color = statusColor;
+            
+            // Render Detailed Mistakes / Review Breakdown
+            const reviewContainer = document.getElementById('mistakes-review-container');
+            reviewContainer.innerHTML = '';
+            
+            if(mistakesList.length === 0) {
+            reviewContainer.innerHTML = `
+            <div class="mistake-card all-correct">
+            <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: var(--success); margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--text-heading); margin-bottom: 0.5rem;">Flawless Performance!</h3>
+            <p style="color: #475569;">You answered all 50 questions correctly without any errors. Outstanding mastery of the Cambridge Class 6 Computer Science curriculum!</p>
+            </div>
+            `;
+            } else {
+            mistakesList.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'mistake-card';
+            card.innerHTML = `
+            <div class="mistake-q-num">Question #${item.qNumber} &bull; ${item.chapter}</div>
+            <div class="mistake-q-text">${item.question}</div>
+            <div class="mistake-details">
+            <div>Your Answer: <span class="wrong-ans">${item.userAnswer}</span></div>
+            <div>Correct Answer: <span class="correct-ans">${item.correctAnswer}</span></div>
+            </div>
+            <div class="explanation-box">
+            <b>Why this is correct:</b> ${item.explanation}
+            </div>
+            `;
+            reviewContainer.appendChild(card);
+            });
+            }
+            
+            // Display Results Screen
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('timer-box').style.display = 'none';
+            document.getElementById('results-screen').style.display = 'block';
+            
+            // Scroll smoothly to top of results
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+            </script>
+            </body>
+            </html>
